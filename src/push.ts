@@ -121,9 +121,8 @@ const params: Params = {...options, filePath: path.resolve(filePath)};
 			body[key] = value;
 		}
 		body.ncmb_object_id = data.objectId;
-		body.ncmb_createdDate = data.createDate;
-		body.ncmb_updatedDate = data.updateDate;
-		console.log(body);
+		body.createdDate = data.createDate;
+		body.updatedDate = data.updateDate;
 		const res = await fetch(`${params.url}/installations`, {
 			method: 'POST',
 			headers: {
