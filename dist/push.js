@@ -23,7 +23,7 @@ const node_fetch_1 = __importDefault(require("node-fetch"));
 ;
 ;
 commander_1.program
-    .option('-k, --key <REST API Key', 'Parse ServerのREST APIキー', '')
+    .option('-k, --key <REST API Key>', 'Parse ServerのREST APIキー', '')
     .option('-u, --url <URL>', 'Parse ServerのURL', '')
     .option('-a, --app <Application ID>', 'Parse ServerのApplication ID', '')
     .argument('<filePath>', 'installation.jsonのパス');
@@ -75,6 +75,9 @@ const params = Object.assign(Object.assign({}, options), { filePath: path_1.defa
             }
             body[key] = value;
         }
+        body._object_id = data.objectId;
+        body._createdDate = data.createDate;
+        body._updatedDate = data.updateDate;
         const res = yield (0, node_fetch_1.default)(`${params.url}/installations`, {
             method: 'POST',
             headers: {

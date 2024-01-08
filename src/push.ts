@@ -64,7 +64,7 @@ interface ParseInstallationResponse {
 };
 
 program
-    .option('-k, --key <REST API Key', 'Parse ServerのREST APIキー', '')
+    .option('-k, --key <REST API Key>', 'Parse ServerのREST APIキー', '')
 		.option('-u, --url <URL>', 'Parse ServerのURL', '')
 		.option('-a, --app <Application ID>', 'Parse ServerのApplication ID', '')
 		.argument('<filePath>', 'installation.jsonのパス');
@@ -120,6 +120,9 @@ const params: Params = {...options, filePath: path.resolve(filePath)};
 			}
 			body[key] = value;
 		}
+		body._object_id = data.objectId;
+		body._createdDate = data.createDate;
+		body._updatedDate = data.updateDate;
 		const res = await fetch(`${params.url}/installations`, {
 			method: 'POST',
 			headers: {
