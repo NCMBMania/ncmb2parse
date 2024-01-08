@@ -1,107 +1,11 @@
-import {program} from 'commander';
-import path from 'path';
-import fs from 'fs';
-import fetch from 'node-fetch';
+import { ParseInstallationRequest, InstallationJson, Params } from './type.d';
+import { insert, content } from './utils';
 
-interface Options {
-	key: string;
-	url: string;
-	app: string;
-};
-
-interface Installation {
-	objectId: string;
-	applicationName: string;
-	appVersion: string;
-	badge: number;
-	channels: string[];
-	deviceToken: string;
-	deviceType: string;
-	sdkVersion: string;
-	timeZone: string;
-	createDate: string;
-	updateDate: string;
-	acl: {
-		[key: string]: {
-			read: boolean;
-			write: boolean;
-		}
-	};
-	pushType: string;
-};
-
-interface InstallationJson {
-	results: Installation[];
-};
-
-interface Params extends Options {
-	filePath: string;
-	file?: InstallationJson;
-};
-
-interface ParseInstallationRequest {
-	appName: string;
-	appVersion: string;
-	badge: number;
-	channels: string[];
-	deviceToken: string;
-	deviceType: string;
-	sdkVersion: string;
-	timeZone: string;
-	acl: {
-		[key: string]: {
-			read: boolean;
-			write: boolean;
-		}
-	};
-	pushType: string;
-	[key: string]: any;
-};
-
-interface ParseInstallationResponse {
-	objectId: string;
-	createdAt: string;
-};
-
-program
-    .option('-k, --key <REST API Key>', 'Parse ServerのREST APIキー', '')
-		.option('-u, --url <URL>', 'Parse ServerのURL', '')
-		.option('-a, --app <Application ID>', 'Parse ServerのApplication ID', '')
-		.argument('<filePath>', 'installation.jsonのパス');
-program.parse();
-
-const options: Options = program.opts();
-
-const [filePath] = program.args;
-
-if (!filePath) {
-	console.error('filePathは必須です');
-	process.exit(1);
-}
-
-const params: Params = {...options, filePath: path.resolve(filePath)};
+const options = content() as Params;
 
 (async (params: Params) => {
-	if (params.app === '') {
-		console.error('アプリIDは必須です -a <App id>');
-		process.exit(1);
-	}
-	if (params.url === '') {
-		console.error('Parse ServerのURLは必須です。例） -u https://example.com/parse');
-		process.exit(1);
-	}
-	if (params.key === '') {
-		console.error('REST APIキーは必須です。例） -k REST_API_KEY');
-		process.exit(1);
-	}
-	try {
-		const file = fs.readFileSync(params.filePath, 'utf-8');
-		params.file = JSON.parse(file);
-	} catch (e) {
-		console.error(`${params.filePath}が見つかりません`);
-		process.exit(1);
-	}
-	for (const data of params.file!.results) {
+	const results = (params.file! as InstallationJson).results;
+	for (const data of results) {
 		const body: ParseInstallationRequest = {
 			appName: data.applicationName,
 			appVersion: data.appVersion,
@@ -120,23 +24,10 @@ const params: Params = {...options, filePath: path.resolve(filePath)};
 			}
 			body[key] = value;
 		}
-		body.ncmb_object_id = data.objectId;
+		body.ncmbObjectId = data.objectId;
 		body.createdDate = data.createDate;
 		body.updatedDate = data.updateDate;
-		const res = await fetch(`${params.url}/installations`, {
-			method: 'POST',
-			headers: {
-				'X-Parse-Application-Id': params.app,
-				'X-Parse-REST-API-Key': params.key,
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(body)
-		});
-		if (res.status !== 201) {
-			console.error(`Installationの作成に失敗しました。${res.status} ${res.statusText}`);
-			process.exit(1);
-		}
-		const json = await res.json() as ParseInstallationResponse;
+		const json = await insert(`${params.url}/installations`, params.app, params.key, body);
 		console.log(`Installationの作成に成功しました。objectId: ${json.objectId}`);
 	}
-})(params);
+})(options);

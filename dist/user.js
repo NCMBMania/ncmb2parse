@@ -15,19 +15,16 @@ const options = (0, utils_1.content)();
     const results = params.file.results;
     for (const data of results) {
         const body = {
-            appName: data.applicationName,
-            appVersion: data.appVersion,
-            badge: data.badge,
-            channels: data.channels,
-            deviceToken: data.deviceToken,
-            deviceType: data.deviceType,
-            sdkVersion: data.sdkVersion,
-            timeZone: data.timeZone,
-            acl: data.acl,
-            pushType: data.pushType
+            username: data.userName,
+            mailAddress: data.mailAddress,
+            password: data.userName,
+            acl: data.acl
         };
+        if (data.authData) {
+            body.authData = data.authData;
+        }
         for (const [key, value] of Object.entries(data)) {
-            if (["objectId", "applicationName", "appVersion", "badge", "channels", "deviceToken", "deviceType", "sdkVersion", "timeZone", "createDate", "updateDate", "acl", "pushType"].includes(key)) {
+            if (["objectId", "authData"].includes(key)) {
                 continue;
             }
             body[key] = value;
@@ -35,7 +32,7 @@ const options = (0, utils_1.content)();
         body.ncmbObjectId = data.objectId;
         body.createdDate = data.createDate;
         body.updatedDate = data.updateDate;
-        const json = yield (0, utils_1.insert)(`${params.url}/installations`, params.app, params.key, body);
-        console.log(`Installationの作成に成功しました。objectId: ${json.objectId}`);
+        const json = yield (0, utils_1.insert)(`${params.url}/users`, params.app, params.key, body);
+        console.log(`Userの作成に成功しました。objectId: ${json.objectId}`);
     }
 }))(options);
