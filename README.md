@@ -25,17 +25,19 @@ Parse Serverを起動する際の、下記データが必要です。
 
 スクリプトを実行するには、Node.jsが必要です。実行時には、オプションを指定してください。
 
+### プッシュ通知の移行
+
 ```bash
-npx node dist/index.ts -a YOUR_APP_ID \
--k YOUR_REST_API_KEY \
--u YOUR_PARSE_SERVER_URL\
-/path/to/installation.json
+npx node dist/push.js -a YOUR_APP_ID \
+  -k YOUR_REST_API_KEY \
+  -u YOUR_PARSE_SERVER_URL\
+  /path/to/installation.json
 ```
 
 指定できるオプションです。
 
 ```
-Usage: index [options] <filePath>
+Usage: push.js [options] <filePath>
 
 Arguments:
   filePath                    installation.jsonのパス
