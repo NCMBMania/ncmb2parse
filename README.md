@@ -34,20 +34,32 @@ npx node dist/push.js -a YOUR_APP_ID \
   /path/to/installation.json
 ```
 
+### ユーザーデータの移行
+
+```bash
+npx node dist/user.js -a YOUR_APP_ID \
+  -k YOUR_REST_API_KEY \
+  -u YOUR_PARSE_SERVER_URL\
+  /path/to/users.json
+```
+
+### オプション
+
 指定できるオプションです。
 
 ```
 Usage: push.js [options] <filePath>
 
 Arguments:
-  filePath                    installation.jsonのパス
+  filePath                    JSONファイルののパス
 
 Options:
-  -k, --key <REST API Key     Parse ServerのREST APIキー (default: "")
-  -u, --url <URL>             Parse ServerのURL (default: "")
-  -a, --app <Application ID>  Parse ServerのApplication ID (default: "")
+  -k, --key <REST API Key>    Parse ServerのREST APIキー
+  -u, --url <URL>             Parse ServerのURL
+  -a, --app <Application ID>  Parse ServerのApplication ID
   -h, --help                  display help for command
 ```
+
 
 ## ライセンス
 
