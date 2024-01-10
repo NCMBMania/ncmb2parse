@@ -1,7 +1,10 @@
 export interface Options {
-	key: string;
 	url: string;
 	app: string;
+	key?: string;
+	name?: string;
+	masterKey?: string;
+	javascriptKey?: string;
 };
 
 export interface ParseResponse {
@@ -42,6 +45,24 @@ export interface ParseUserRequest {
 	[key: string]: any;
 }
 
+export interface ParseRoleRequest {
+	name: string;
+	ACL: {
+		[key: string]: {
+			read: boolean;
+			write: boolean;
+		}
+	};
+	users?: {
+		__op: string;
+		objects: {
+			__type: string;
+			className: string;
+			objectId: string;
+		}[]
+	}
+}
+
 export interface Installation {
 	objectId: string;
 	applicationName: string;
@@ -79,6 +100,19 @@ export interface User {
 	};
 };
 
+export interface Role {
+	objectId: string;
+	roleName: string;
+	createDate: string;
+	updateDate: string;
+	acl: {
+		[key: string]: {
+			read: boolean;
+			write: boolean;
+		}
+	};
+};
+
 export interface InstallationJson {
 	results: Installation[];
 };
@@ -87,6 +121,11 @@ export interface UserJson {
 	results: User[];
 };
 
+export interface RoleJson {
+	results: User[];
+};
+
 export interface Params extends Options {
+	filePath: string;
 	file?: InstallationJson | UserJson;
 };

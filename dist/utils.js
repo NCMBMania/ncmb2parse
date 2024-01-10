@@ -17,10 +17,13 @@ const commander_1 = require("commander");
 const fs_1 = __importDefault(require("fs"));
 const content = () => {
     commander_1.program
-        .option('-k, --key <REST API Key>', 'Parse ServerのREST APIキー')
+        .option('-k, --key <REST API Key>', 'Parse ServerのREST APIキー', '')
         .option('-u, --url <URL>', 'Parse ServerのURL')
         .option('-a, --app <Application ID>', 'Parse ServerのApplication ID')
-        .argument('<filePath>', 'インストールするJSONファイルのパス');
+        .option('-n, --name <Name>', 'クラス名、ロール名を指定', '')
+        .option('-m, --masterKey <Master Key>', 'Parse ServerのMaster Key', '')
+        .option('-j, --javascriptKey <JavaScript Key>', 'Parse ServerのJavaScript Key', '')
+        .argument('<filePath>', 'インポートするJSONファイルのパス');
     commander_1.program.parse();
     const options = commander_1.program.opts();
     const [filePath] = commander_1.program.args;
@@ -30,6 +33,7 @@ const content = () => {
     }
     const file = fs_1.default.readFileSync(filePath, 'utf-8');
     options.file = JSON.parse(file);
+    options.filePath = filePath;
     return options;
 };
 exports.content = content;
@@ -44,8 +48,7 @@ const insert = (url, appId, key, body) => __awaiter(void 0, void 0, void 0, func
         body: JSON.stringify(body)
     });
     if (res.status !== 201) {
-        console.error(`データ作成に失敗しました。${res.status} ${yield res.text()}`);
-        process.exit(1);
+        throw new Error(`データ作成に失敗しました。${res.status} ${yield res.text()}`);
     }
     return res.json();
 });

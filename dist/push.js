@@ -11,6 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils_1 = require("./utils");
 const options = (0, utils_1.content)();
+if (options.key === '') {
+    console.error('REST APIキーは必須です');
+    process.exit(1);
+}
 ((params) => __awaiter(void 0, void 0, void 0, function* () {
     const results = params.file.results;
     for (const data of results) {

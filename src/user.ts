@@ -3,6 +3,11 @@ import { insert, content } from './utils';
 
 const options = content() as Params;
 
+if (options.key === '') {
+	console.error('REST APIキーは必須です');
+	process.exit(1);
+}
+
 (async (params: Params) => {
 	const results = (params.file! as UserJson).results;
 	for (const data of results) {
@@ -24,7 +29,12 @@ const options = content() as Params;
 		body.ncmbObjectId = data.objectId;
 		body.createdDate = data.createDate;
 		body.updatedDate = data.updateDate;
-		const json = await insert(`${params.url}/users`, params.app, params.key, body);
-		console.log(`Userの作成に成功しました。objectId: ${json.objectId}`);
+		try {
+			const json = await insert(`${params.url}/users`, params.app, params.key!, body);
+			console.log(`Userの作成に成功しました。objectId: ${json.objectId}`);
+		} catch (e) {
+			console.error((e as Error).message);
+			console.log(`Userの作成に失敗しました。元objectId: ${data.objectId}`)
+		}
 	}
 })(options);

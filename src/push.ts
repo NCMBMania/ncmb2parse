@@ -2,6 +2,10 @@ import { ParseInstallationRequest, InstallationJson, Params } from './type.d';
 import { insert, content } from './utils';
 
 const options = content() as Params;
+if (options.key === '') {
+	console.error('REST APIキーは必須です');
+	process.exit(1);
+}
 
 (async (params: Params) => {
 	const results = (params.file! as InstallationJson).results;
@@ -27,7 +31,7 @@ const options = content() as Params;
 		body.ncmbObjectId = data.objectId;
 		body.createdDate = data.createDate;
 		body.updatedDate = data.updateDate;
-		const json = await insert(`${params.url}/installations`, params.app, params.key, body);
+		const json = await insert(`${params.url}/installations`, params.app, params.key!, body);
 		console.log(`Installationの作成に成功しました。objectId: ${json.objectId}`);
 	}
 })(options);

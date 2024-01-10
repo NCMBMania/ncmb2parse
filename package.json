@@ -11,6 +11,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node-fetch": "^2.6.10",
+    "@types/parse": "^3.0.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },

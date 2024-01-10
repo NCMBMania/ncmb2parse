@@ -11,6 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils_1 = require("./utils");
 const options = (0, utils_1.content)();
+if (options.key === '') {
+    console.error('REST APIキーは必須です');
+    process.exit(1);
+}
 ((params) => __awaiter(void 0, void 0, void 0, function* () {
     const results = params.file.results;
     for (const data of results) {
@@ -32,7 +36,13 @@ const options = (0, utils_1.content)();
         body.ncmbObjectId = data.objectId;
         body.createdDate = data.createDate;
         body.updatedDate = data.updateDate;
-        const json = yield (0, utils_1.insert)(`${params.url}/users`, params.app, params.key, body);
-        console.log(`Userの作成に成功しました。objectId: ${json.objectId}`);
+        try {
+            const json = yield (0, utils_1.insert)(`${params.url}/users`, params.app, params.key, body);
+            console.log(`Userの作成に成功しました。objectId: ${json.objectId}`);
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`Userの作成に失敗しました。元objectId: ${data.objectId}`);
+        }
     }
 }))(options);

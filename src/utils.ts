@@ -4,10 +4,13 @@ import fs from "fs";
 
 export const content = (): Params => {
 	program
-		.option('-k, --key <REST API Key>', 'Parse ServerのREST APIキー')
+		.option('-k, --key <REST API Key>', 'Parse ServerのREST APIキー', '')
 		.option('-u, --url <URL>', 'Parse ServerのURL')
 		.option('-a, --app <Application ID>', 'Parse ServerのApplication ID')
-		.argument('<filePath>', 'インストールするJSONファイルのパス');
+		.option('-n, --name <Name>', 'クラス名、ロール名を指定', '')
+		.option('-m, --masterKey <Master Key>', 'Parse ServerのMaster Key', '')
+		.option('-j, --javascriptKey <JavaScript Key>', 'Parse ServerのJavaScript Key', '')
+		.argument('<filePath>', 'インポートするJSONファイルのパス');
 	program.parse();
 	const options: Params = program.opts();
 	const [filePath] = program.args;
@@ -17,6 +20,7 @@ export const content = (): Params => {
 	}
 	const file = fs.readFileSync(filePath, 'utf-8');
 	options.file = JSON.parse(file);
+	options.filePath = filePath;
 	return options;
 }
 
@@ -36,8 +40,7 @@ export const insert = async (
 		body: JSON.stringify(body)
 	});
 	if (res.status !== 201) {
-		console.error(`データ作成に失敗しました。${res.status} ${await res.text()}`);
-		process.exit(1);
+		throw new Error(`データ作成に失敗しました。${res.status} ${await res.text()}`);
 	}
 	return res.json();
 };

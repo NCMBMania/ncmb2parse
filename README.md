@@ -43,23 +43,36 @@ npx node dist/user.js -a YOUR_APP_ID \
   /path/to/users.json
 ```
 
+### ロールデータの移行
+
+```bash
+npx node dist/role.js -m MASTER_KEY \
+  -a YOUR_APP_ID \
+  -j YOUR_JAVASCRIPT_KEY \
+  -n ROLE_NAME \
+  -u YOUR_PARSE_SERVER_URL\
+  /path/to/role.json
+```
+
 ### オプション
 
 指定できるオプションです。
 
 ```
-Usage: push.js [options] <filePath>
+Usage: file [options] <filePath>
 
 Arguments:
-  filePath                    JSONファイルののパス
+  filePath                              インポートするJSONファイルのパス
 
 Options:
-  -k, --key <REST API Key>    Parse ServerのREST APIキー
-  -u, --url <URL>             Parse ServerのURL
-  -a, --app <Application ID>  Parse ServerのApplication ID
-  -h, --help                  display help for command
+  -k, --key <REST API Key>              Parse ServerのREST APIキー (default: "")
+  -u, --url <URL>                       Parse ServerのURL
+  -a, --app <Application ID>            Parse ServerのApplication ID
+  -n, --name <Name>                     クラス名、ロール名を指定 (default: "")
+  -m, --masterKey <Master Key>          Parse ServerのMaster Key (default: "")
+  -j, --javascriptKey <JavaScript Key>  Parse ServerのJavaScript Key (default: "")
+  -h, --help                            display help for command
 ```
-
 
 ## ライセンス
 
