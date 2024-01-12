@@ -30,6 +30,7 @@ Parse.serverURL = options.url;
 	const query = new Parse.Query(Parse.User);
 	const users = await query
 		.containedIn('ncmbObjectId', objectIds)
+		.limit(1000)
 		.findAll({useMasterKey: true});
 	users.map((user) => role.getUsers().add(user));
 	try {

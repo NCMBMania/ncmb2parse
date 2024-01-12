@@ -1,6 +1,7 @@
 import { program } from "commander";
-import { ParseResponse, ParseInstallationRequest, Params, ParseUserRequest } from "./type.d";
+import { ParseResponse, ParseInstallationRequest, Params, ParseUserRequest, ParseDataStoreRequest } from "./type.d";
 import fs from "fs";
+import path from "path";
 
 export const content = (): Params => {
 	program
@@ -18,9 +19,9 @@ export const content = (): Params => {
 		console.error('filePathは必須です');
 		process.exit(1);
 	}
-	const file = fs.readFileSync(filePath, 'utf-8');
+	options.filePath = path.resolve(filePath);
+	const file = fs.readFileSync(options.filePath, 'utf-8');
 	options.file = JSON.parse(file);
-	options.filePath = filePath;
 	return options;
 }
 
@@ -28,7 +29,7 @@ export const insert = async (
 		url: string,
 		appId: string,
 		key: string,
-		body: ParseInstallationRequest | ParseUserRequest
+		body: ParseInstallationRequest | ParseUserRequest | ParseDataStoreRequest
 	): Promise<ParseResponse> => {
 	const res = await fetch(url, {
 		method: 'POST',

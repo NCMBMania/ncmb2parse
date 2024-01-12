@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.insert = exports.content = void 0;
 const commander_1 = require("commander");
 const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
 const content = () => {
     commander_1.program
         .option('-k, --key <REST API Key>', 'Parse ServerのREST APIキー', '')
@@ -31,9 +32,9 @@ const content = () => {
         console.error('filePathは必須です');
         process.exit(1);
     }
-    const file = fs_1.default.readFileSync(filePath, 'utf-8');
+    options.filePath = path_1.default.resolve(filePath);
+    const file = fs_1.default.readFileSync(options.filePath, 'utf-8');
     options.file = JSON.parse(file);
-    options.filePath = filePath;
     return options;
 };
 exports.content = content;

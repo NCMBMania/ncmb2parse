@@ -46,12 +46,37 @@ npx node dist/user.js -a YOUR_APP_ID \
 ### ロールデータの移行
 
 ```bash
-npx node dist/role.js -m MASTER_KEY \
+npx node dist/role.js \
+  -m MASTER_KEY \
   -a YOUR_APP_ID \
   -j YOUR_JAVASCRIPT_KEY \
   -n ROLE_NAME \
   -u YOUR_PARSE_SERVER_URL\
   /path/to/role.json
+```
+
+### ファイルデータの移行
+
+```bash
+npx node dist/file.js \
+  -m MASTER_KEY \
+  -a YOUR_APP_ID \
+  -j YOUR_JAVASCRIPT_KEY \
+  -u YOUR_PARSE_SERVER_URL\
+  /path/to/files.json
+```
+
+### データストアの移行
+
+```bash
+npx ts-node src/datastore.ts \
+  -k restAPIKey \
+  -m MASTER_KEY \
+  -a YOUR_APP_ID \
+  -j YOUR_JAVASCRIPT_KEY \
+  -u YOUR_PARSE_SERVER_URL\
+  -n YOUR_CLASS_NAME \
+  /path/to/datastore.json
 ```
 
 ### オプション

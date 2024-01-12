@@ -24,30 +24,39 @@ if (options.javascriptKey === '') {
     process.exit(1);
 }
 if (options.name === '') {
-    console.error('ロール名は必須です');
+    console.error('クラス名は必須です');
     process.exit(1);
 }
 node_1.default.initialize(options.app, options.javascriptKey, options.masterKey);
 node_1.default.serverURL = options.url;
 ((params) => __awaiter(void 0, void 0, void 0, function* () {
-    const roleName = params.name;
-    const results = params.file.results;
-    const roleACL = new node_1.default.ACL();
-    roleACL.setPublicReadAccess(true);
-    const role = new node_1.default.Role(roleName, roleACL);
-    const objectIds = results.map((result) => result.objectId);
     const query = new node_1.default.Query(node_1.default.User);
     const users = yield query
-        .containedIn('ncmbObjectId', objectIds)
         .limit(1000)
-        .findAll({ useMasterKey: true });
-    users.map((user) => role.getUsers().add(user));
-    try {
-        yield role.save();
-        console.log(`ロールの作成に成功しました。ロール名: ${role.getName()}`);
-    }
-    catch (e) {
-        console.error(e.message);
-        console.log(`ロールの作成に失敗しました。ロール名: ${role.getName()}`);
+        .find({ useMasterKey: true });
+    const { results } = params.file;
+    for (const data of results) {
+        data.ncmbObjectId = data.objectId;
+        data.createdDate = data.createDate;
+        data.updatedDate = data.updateDate;
+        data.ACL = data.acl;
+        delete data.objectId;
+        delete data.createDate;
+        delete data.updateDate;
+        delete data.acl;
+        for (const user of users) {
+            if (data.ACL[user.get('ncmbObjectId')]) {
+                data.ACL[user.id] = data.ACL[user.get('ncmbObjectId')];
+                delete data.ACL[user.get('ncmbObjectId')];
+            }
+        }
+        try {
+            const json = yield (0, utils_1.insert)(`${params.url}/classes/${params.name}`, params.app, params.key, data);
+            console.log(`${params.name}の作成に成功しました。objectId: ${json.objectId}`);
+        }
+        catch (e) {
+            console.error(e.message);
+            console.log(`${params.name}の作成に失敗しました。元objectId: ${data.objectId}`);
+        }
     }
 }))(options);

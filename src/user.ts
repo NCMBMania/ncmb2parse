@@ -7,9 +7,20 @@ if (options.key === '') {
 	console.error('REST APIキーは必須です');
 	process.exit(1);
 }
+if (options.masterKey === '') {
+	console.error('masterKeyは必須です');
+	process.exit(1);
+}
+if (options.javascriptKey === '') {
+	console.error('javascriptKeyは必須です');
+	process.exit(1);
+}
+
+Parse.initialize(options.app, options.javascriptKey, options.masterKey);
+Parse.serverURL = options.url;
 
 (async (params: Params) => {
-	const results = (params.file! as UserJson).results;
+	const { results } = (params.file! as UserJson);
 	for (const data of results) {
 		const body: ParseUserRequest = {
 			username: data.userName,

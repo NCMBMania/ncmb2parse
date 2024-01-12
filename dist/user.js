@@ -15,8 +15,18 @@ if (options.key === '') {
     console.error('REST APIキーは必須です');
     process.exit(1);
 }
+if (options.masterKey === '') {
+    console.error('masterKeyは必須です');
+    process.exit(1);
+}
+if (options.javascriptKey === '') {
+    console.error('javascriptKeyは必須です');
+    process.exit(1);
+}
+Parse.initialize(options.app, options.javascriptKey, options.masterKey);
+Parse.serverURL = options.url;
 ((params) => __awaiter(void 0, void 0, void 0, function* () {
-    const results = params.file.results;
+    const { results } = params.file;
     for (const data of results) {
         const body = {
             username: data.userName,

@@ -125,7 +125,37 @@ export interface RoleJson {
 	results: User[];
 };
 
+export interface File {
+	fileName: string;
+	mimeType: string;
+	fileSize: number;
+	createDate: string;
+	updateDate: string;
+	acl: {
+		[key: string]: {
+			read: boolean;
+			write: boolean;
+		}
+	};
+};
+
+export interface FileJson {
+	results: File[];
+}
+
 export interface Params extends Options {
 	filePath: string;
-	file?: InstallationJson | UserJson;
+	file?: InstallationJson | UserJson | RoleJson | FileJson;
 };
+
+export interface DataStore {
+	[key: string]: any;
+}
+
+export interface DataStoreJson {
+	results: DataStore[];
+}
+
+export interface ParseDataStoreRequest {
+	[key: string]: any;
+}
